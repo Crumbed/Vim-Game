@@ -4,19 +4,23 @@ import java.io.IOException;
 
 import utils.KeyInput;
 import utils.RowPrinter;
-
+import gfx.Screen;
 
 
 
 public class Main {
 
-    static Thread movement = new Thread(new Movement());
-    static RowPrinter rp = new RowPrinter(40);
+    public static Thread movement = new Thread(new Movement());
+    public static RowPrinter rp;
+    public static Screen screen;
+    
+    public static int height = 35;
 
-    public static void main(String[] args){
-        movement.start();
+    public static void main(String[] args) {
+        rp = new RowPrinter(height);
+        screen = new Screen(height-5, height-5);
         
-        rp.writeRow(39, "running");
+        movement.start();
         
     }
 
@@ -42,22 +46,26 @@ class Movement implements Runnable {
                     case 'q':
                         System.exit(1);
                     case 'j':
-                        Main.rp.writeRow(39, "DOWN");
+                        if (Main.screen.playerPos[1] == 1) break;
+                        Main.screen.down();
                         break;
                     case 'k':
-                        Main.rp.writeRow(39, "UP");
+                        if (Main.screen.playerPos[1] == Main.height-5) break;
+                        Main.screen.up();
                         break;
                     case 'h':
-                        Main.rp.writeRow(39, "LEFT");
+                        if (Main.screen.playerPos[0] == Main.height-5) break;
+                        Main.screen.left();
                         break;
                     case 'l':
-                        Main.rp.writeRow(39, "RIGHT");
+                        if (Main.screen.playerPos[0] == 1) break;
+                        Main.screen.right();
                         break;
 
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Main.rp.writeRow(39, e.toString());
         }
     }
 
